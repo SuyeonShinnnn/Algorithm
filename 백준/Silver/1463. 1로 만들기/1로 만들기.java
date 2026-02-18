@@ -1,33 +1,33 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.LinkedList;
-import java.util.Queue;
 
 public class Main {
+    public static int dp(int n) {
+        int[] arr = new int[n + 1];
+
+        for (int i = 1; i <= n; i++) {
+            if (i == 1) {
+                arr[i] = 0;
+                continue;
+            }
+
+            arr[i] = arr[i - 1] + 1;
+
+            if (i % 2 == 0) {
+                arr[i] = Math.min(arr[i], arr[i / 2] + 1);
+            }
+            if (i % 3 == 0) {
+                arr[i] = Math.min(arr[i], arr[i / 3] + 1);
+            }
+        }
+        return arr[n];
+    }
+
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int n = Integer.parseInt(br.readLine());
-
-        Queue<int[]> q = new LinkedList<>();
-        q.offer(new int[]{n, 0});
-        while (!q.isEmpty()) {
-            int[] curr = q.poll();
-
-            if (curr[0] == 1) {
-                System.out.println(curr[1]);
-                break;
-            }
-
-            if (curr[0] % 3 == 0) {
-                q.offer(new int[]{curr[0] / 3, curr[1] + 1});
-            }
-            if (curr[0] % 2 == 0) {
-                q.offer(new int[]{curr[0] / 2, curr[1] + 1});
-            }
-
-            q.offer(new int[]{curr[0] - 1, curr[1] + 1});
-
-        }
+        int answer = dp(n);
+        System.out.println(answer);
     }
 }
