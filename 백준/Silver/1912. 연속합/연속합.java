@@ -1,23 +1,25 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
 import java.util.*;
 
 public class Main {
     static int[] nums;
 
     public static int dp(int n) {
-        List<Integer> list = new ArrayList<>();
+        int[] arr = new int[n];
+        int max = Integer.MIN_VALUE;
 
         for (int i = 0; i < n; i++) {
             if (i == 0) {
-                list.add(nums[0]);
+                arr[0] = nums[0];
             } else {
-                list.add(Math.max(list.get(list.size() - 1) + nums[i], nums[i]));
+                arr[i] = Math.max(arr[i - 1] + nums[i], nums[i]);
             }
+            max = Math.max(arr[i], max);
         }
-        Collections.sort(list);
-        return list.get(list.size() - 1);
+        return max;
     }
 
     public static void main(String[] args) throws IOException {
@@ -31,6 +33,5 @@ public class Main {
         }
         int answer = dp(n);
         System.out.println(answer);
-
     }
 }
