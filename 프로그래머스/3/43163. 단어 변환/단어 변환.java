@@ -1,51 +1,46 @@
 import java.util.*;
 
 class Solution {
-    Queue<int[]> q = new LinkedList<>();
     
-    public boolean checkDiff(String a, String b) {
+    private int n;
+    private int min = Integer.MAX_VALUE;
+    
+    public boolean isNext(String curr, String next) {
         int count = 0;
         
-        for(int i = 0; i < a.length(); i++) {
-            if(a.charAt(i) != b.charAt(i)) {
+        for(int i = 0; i < curr.length(); i++) {
+            if(curr.charAt(i) == next.charAt(i)) {
                 count++;
             }
         }
-        if(count == 1) {
-            return true;
-        }
+        if(count == curr.length() - 1) return true;
         return false;
     }
+    
+    public void dfs(int count, boolean[] visited, String curr, String target, String[] words) {
+        
+        if(curr.equals(target)) {
+            min = Math.min(min, count);
+            return;
+        }
+        
+        for(int i = 0; i < n; i++) {
+            if(!visited[i] && isNext(curr, words[i])) {
+                visited[i] = true;
+                
+                dfs(count + 1, visited, words[i], target, words);
+                
+                visited[i] = false;
+            }
+        }
+    }
+    
     public int solution(String begin, String target, String[] words) {
-        int answer = 0;
-        boolean[] visited = new boolean[words.length];
+        n = words.length;
+        dfs(0, new boolean[n], begin, target, words);
         
-        for(int i = 0; i < words.length; i++) {
-            if(checkDiff(begin, words[i])) {
-                q.add(new int[]{i, 1});
-            }
-        }
+        if(min == Integer.MAX_VALUE) return 0;
         
-        while(!q.isEmpty()) {
-            int[] curr = q.poll();
-            int currIdx = curr[0];
-            int currCnt = curr[1];
-            visited[currIdx] = true;
-            
-            System.out.println(words[currIdx] + " " + currCnt);
-            
-            if(words[currIdx].equals(target)){
-                return currCnt;
-            }
-            
-            for(int i = 0; i < words.length; i++) {
-                if(!visited[i] && checkDiff(words[currIdx], words[i])) {
-                    q.offer(new int[]{i, currCnt + 1});
-                    visited[i] = true;
-                }
-            }
-        }
-        
-        return answer;
+        return min;
     }
 }
