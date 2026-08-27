@@ -16,12 +16,12 @@ class Solution {
         int time = 0;
         int sum = 0;
         int count = 0;
-        Set<Integer> visited = new HashSet<>();
+        boolean[] visited = new boolean[jobs.length];
         while(count < jobs.length) {
             for(int i = 0; i < jobs.length; i++) {
-                if(time >= jobs[i][0] && !visited.contains(i)) {
+                if(time >= jobs[i][0] && !visited[i]) {
                     pq.offer(new int[] {jobs[i][1], jobs[i][0], i});
-                    visited.add(i);
+                    visited[i] = true;
                 }
             }
             
