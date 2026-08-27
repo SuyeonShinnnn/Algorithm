@@ -1,34 +1,32 @@
 import java.util.*;
 
 class Solution {
-    
-    public boolean spinning(String s, int start) {
+    public boolean search(int idx, String s) {
         Stack<Character> stack = new Stack<>();
-        
-        for(int i = start; i < s.length() + start; i++) {
-            char curr = s.charAt(i % s.length());
-       
-            if(!stack.isEmpty() && ((stack.peek() == '(' && curr == ')') 
-              || (stack.peek() == '[' && curr == ']')
-              || (stack.peek() == '{' && curr == '}'))) {
+        for(int i = 0; i < s.length(); i++) {
+            char curr = s.charAt((i + idx) % s.length());
+            
+            if(!stack.isEmpty() 
+                    && ((stack.peek() == '[' && curr == ']')
+                   || (stack.peek() == '{' && curr == '}')
+                   || (stack.peek() == '(' && curr == ')'))) {
                 stack.pop();
             }
             else {
-                stack.push(curr);
+                stack.add(curr);
             }
         }
-   
-        if(!stack.isEmpty()) return false;
-        return true;
+        
+        if(stack.isEmpty()) return true;
+        return false;
     }
     public int solution(String s) {
-        int count = 0;
-        
+        int answer = 0;
         for(int i = 0; i < s.length(); i++) {
-            if(spinning(s, i)) {
-                count++;
+            if(search(i, s)) {
+                answer++;
             }
         }
-        return count;
+        return answer;
     }
 }
