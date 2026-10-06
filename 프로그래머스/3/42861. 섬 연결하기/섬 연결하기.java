@@ -1,43 +1,41 @@
 import java.util.*;
 
 class Solution {
+    private static int[] parent = null;
     
-    private int[][] map;
-    
-    public int bfs(int n) {
-        Queue<int[]> pq = new PriorityQueue<>((o1, o2) -> {
-            return o1[1] - o2[1];
-        });
-        Set<Integer> visited = new HashSet<>();
+    private static int find(int element) {
+        if (parent[element] == element) return element;
         
-        pq.offer(new int[]{0, 0});
-        visited.add(0);
-        
-        int dist = 0;
-        while(!pq.isEmpty()) {
-            int[] curr = pq.poll();
-            
-            if(!visited.contains(curr[0])) {
-                visited.add(curr[0]);
-                dist += curr[1];
-            }
-            
-            if(visited.size() == n) return dist;
-            
-            for(int i = 0; i < n; i++) {
-                if(!visited.contains(i) && map[curr[0]][i] != 0) {
-                    pq.offer(new int[] {i, map[curr[0]][i]});
-                }
-            }
-        }
-        return dist;
+        return find(parent[element]);
     }
-    public int solution(int n, int[][] costs) {
-        map = new int[n][n];
-        for(int[] c: costs) {
-            map[c[0]][c[1]] = c[2];
-            map[c[1]][c[0]] = c[2];
+    
+    private static void union(int parent1, int parent2) {
+        if (parent1 != parent2) {
+            parent[parent2] = parent1;
         }
-        return bfs(n);
+    }
+    
+    public int solution(int n, int[][] costs) {
+        parent = new int[n];
+        
+        for (int i = 0; i < n; i++) {
+            parent[i] = i;
+        }
+        
+        Arrays.sort(costs, (e1, e2) -> e1[2] - e2[2]);
+        
+        int answer = 0;
+        
+        for (int i = 0; i < costs.length; i++) {
+            int parent1 = find(costs[i][0]);
+            int parent2 = find(costs[i][1]);
+            
+            if (parent1 != parent2) {
+                union(parent1, parent2);
+                answer += costs[i][2];
+            }
+        }
+        
+        return answer;
     }
 }
