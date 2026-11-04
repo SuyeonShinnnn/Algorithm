@@ -21,9 +21,3 @@ class Solution {
         return count;
     }
 }
-
-/**
--20   -18  -14  -5
-
--15   -13  -5   -3 
-*/
